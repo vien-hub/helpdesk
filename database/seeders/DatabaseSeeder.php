@@ -11,17 +11,15 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Demo account for the checking (safe to run many times).
-        $demo = User::firstOrCreate(
-            ['email' => 'demo@helpdesk.test'],
-            ['name' => 'Demo User', 'password' => Hash::make(env('DEMO_PASSWORD') ?: 'password')]
-        );
+   $demo = User::updateOrCreate(
+    ['email' => 'demo@helpdesk.test'],
+    ['name' => 'Demo User', 'password' => Hash::make(env('DEMO_PASSWORD') ?: 'password')]
+);
 
-        // Second account, handy for proving the 403 ownership check.
-        User::firstOrCreate(
-            ['email' => 'other@helpdesk.test'],
-            ['name' => 'Other User', 'password' => Hash::make(env('DEMO_PASSWORD') ?: 'password')]
-        );
+User::updateOrCreate(
+    ['email' => 'other@helpdesk.test'],
+    ['name' => 'Other User', 'password' => Hash::make(env('DEMO_PASSWORD') ?: 'password')]
+);
 
         if (Ticket::where('user_id', $demo->id)->exists()) {
             return;
