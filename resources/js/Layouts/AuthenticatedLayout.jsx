@@ -73,7 +73,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             !route().current("tickets.create")
                     )}
                 >
-                    <Icon name="list" /> My tickets
+                    <Icon name="list" /> Tickets
                 </Link>
                 <Link
                     href={route("profile.edit")}
