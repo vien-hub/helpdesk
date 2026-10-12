@@ -1,24 +1,41 @@
 const priorityStyles = {
-    Low: 'bg-gray-100 text-gray-700 ring-gray-300',
-    Medium: 'bg-blue-100 text-blue-700 ring-blue-300',
-    High: 'bg-orange-100 text-orange-700 ring-orange-300',
-    Urgent: 'bg-red-100 text-red-700 ring-red-300',
+    Low: "bg-slate-100 text-slate-700",
+    Medium: "bg-sky-100 text-sky-800",
+    High: "bg-amber-100 text-amber-800",
+    Urgent: "bg-rose-100 text-rose-800",
 };
-
 const statusStyles = {
-    Open: 'bg-yellow-100 text-yellow-800 ring-yellow-300',
-    'In Progress': 'bg-indigo-100 text-indigo-700 ring-indigo-300',
-    Resolved: 'bg-green-100 text-green-700 ring-green-300',
-    Closed: 'bg-gray-200 text-gray-700 ring-gray-400',
+    Open: "bg-amber-100 text-amber-800",
+    "In Progress": "bg-sky-100 text-sky-800",
+    Resolved: "bg-emerald-100 text-emerald-800",
+    Closed: "bg-slate-200 text-slate-700",
 };
-
+const dot = {
+    Open: "bg-amber-500",
+    "In Progress": "bg-sky-500",
+    Resolved: "bg-emerald-500",
+    Closed: "bg-slate-500",
+};
 const base =
-    'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset';
+    "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold";
 
 export function PriorityBadge({ value }) {
-    return <span className={`${base} ${priorityStyles[value] ?? priorityStyles.Low}`}>{value}</span>;
+    return (
+        <span
+            className={`${base} ${priorityStyles[value] ?? priorityStyles.Low}`}
+        >
+            {value}
+        </span>
+    );
 }
 
 export function StatusBadge({ value }) {
-    return <span className={`${base} ${statusStyles[value] ?? statusStyles.Open}`}>{value}</span>;
+    return (
+        <span className={`${base} ${statusStyles[value] ?? statusStyles.Open}`}>
+            <span
+                className={`h-1.5 w-1.5 rounded-full ${dot[value] ?? dot.Open}`}
+            />
+            {value}
+        </span>
+    );
 }

@@ -1,108 +1,183 @@
-import FlashMessage from '@/Components/FlashMessage';
-import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import FlashMessage from "@/Components/FlashMessage";
+import { Link, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
+
+const icons = {
+    home: "M3 12l9-9 9 9M5 10v10h14V10",
+    list: "M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01",
+    plus: "M12 5v14M5 12h14",
+    user: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM4 21a8 8 0 0116 0",
+    logout: "M15 17l5-5-5-5M20 12H9M12 21H5a2 2 0 01-2-2V5a2 2 0 012-2h7",
+};
+
+const Icon = ({ name }) => (
+    <svg
+        className="h-5 w-5 shrink-0"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth="1.8"
+    >
+        <path strokeLinecap="round" strokeLinejoin="round" d={icons[name]} />
+    </svg>
+);
 
 export default function AuthenticatedLayout({ header, children }) {
-    const { auth } = usePage().props;
-    const [menuOpen, setMenuOpen] = useState(false);
+    const page = usePage();
+    const { auth } = page.props;
+    const url = page.url;
+    const [open, setOpen] = useState(false);
 
-    const navLink = (active) =>
-        `rounded-md px-3 py-2 text-sm font-medium ${
-            active ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'
+    // close the drawer after navigating
+    useEffect(() => {
+        setOpen(false);
+    }, [url]);
+
+    const item = (active) =>
+        `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 ${
+            active
+                ? "bg-teal-500/15 text-teal-300"
+                : "text-slate-300 hover:bg-white/5 hover:text-white"
         }`;
 
-    const newTicketBtn =
-        'inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500';
+    const nav = (
+        <div className="flex h-full flex-col">
+            <Link
+                href={route("dashboard")}
+                className="flex items-center gap-2.5 px-3 py-2 text-lg font-extrabold text-white"
+            >
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-teal-500">
+                    H
+                </span>
+                HelpDesk
+            </Link>
 
-    return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white">
-                <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center gap-4">
-                        <Link href={route('dashboard')} className="text-lg font-bold text-indigo-600">
-                            HelpDesk
-                        </Link>
-                        <div className="hidden items-center gap-1 md:flex">
-                            <Link href={route('dashboard')} className={navLink(route().current('dashboard'))}>
-                                Dashboard
-                            </Link>
-                            <Link href={route('tickets.index')} className={navLink(route().current('tickets.index'))}>
-                                Tickets
-                            </Link>
-                        </div>
-                    </div>
+            <Link
+                href={route("tickets.create")}
+                className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-teal-500 px-3 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-teal-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            >
+                <Icon name="plus" /> New ticket
+            </Link>
 
-                    <div className="hidden items-center gap-3 md:flex">
-                        <Link href={route('tickets.create')} className={newTicketBtn}>
-                            + New Ticket
-                        </Link>
-                        <Link href={route('profile.edit')} className="text-sm text-gray-700 hover:underline">
-                            {auth.user.name}
-                        </Link>
-                        <Link
-                            href={route('logout')}
-                            method="post"
-                            as="button"
-                            className="rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                        >
-                            Logout
-                        </Link>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={() => setMenuOpen((v) => !v)}
-                        className="rounded-md p-2 text-gray-600 hover:bg-gray-100 md:hidden"
-                        aria-label="Toggle navigation menu"
-                        aria-expanded={menuOpen}
-                    >
-                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            {menuOpen ? (
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            ) : (
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                            )}
-                        </svg>
-                    </button>
-                </div>
-
-                {menuOpen && (
-                    <div className="space-y-1 border-t border-gray-200 px-4 py-3 md:hidden">
-                        <Link href={route('dashboard')} className={`block ${navLink(route().current('dashboard'))}`}>
-                            Dashboard
-                        </Link>
-                        <Link href={route('tickets.index')} className={`block ${navLink(route().current('tickets.index'))}`}>
-                            Tickets
-                        </Link>
-                        <Link href={route('tickets.create')} className={`${newTicketBtn} w-full justify-center`}>
-                            + New Ticket
-                        </Link>
-                        <div className="border-t border-gray-200 pt-3">
-                            <Link href={route('profile.edit')} className="block px-3 py-2 text-sm text-gray-700">
-                                {auth.user.name}
-                            </Link>
-                            <Link
-                                href={route('logout')}
-                                method="post"
-                                as="button"
-                                className="block w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                                Logout
-                            </Link>
-                        </div>
-                    </div>
-                )}
+            <nav className="mt-6 space-y-1" aria-label="Main">
+                <Link
+                    href={route("dashboard")}
+                    className={item(route().current("dashboard"))}
+                >
+                    <Icon name="home" /> Dashboard
+                </Link>
+                <Link
+                    href={route("tickets.index")}
+                    className={item(
+                        route().current("tickets.*") &&
+                            !route().current("tickets.create")
+                    )}
+                >
+                    <Icon name="list" /> My tickets
+                </Link>
+                <Link
+                    href={route("profile.edit")}
+                    className={item(route().current("profile.*"))}
+                >
+                    <Icon name="user" /> Profile
+                </Link>
             </nav>
 
-            <FlashMessage />
+            <div className="mt-auto border-t border-white/10 pt-4">
+                <div className="flex items-center gap-3 px-3 pb-3">
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-slate-700 text-sm font-bold text-white">
+                        {auth.user.name?.[0]?.toUpperCase()}
+                    </span>
+                    <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-white">
+                            {auth.user.name}
+                        </p>
+                        <p className="truncate text-xs text-slate-400">
+                            {auth.user.email}
+                        </p>
+                    </div>
+                </div>
+                <Link
+                    href={route("logout")}
+                    method="post"
+                    as="button"
+                    className={`w-full ${item(false)}`}
+                >
+                    <Icon name="logout" /> Log out
+                </Link>
+            </div>
+        </div>
+    );
 
-            {header && (
-                <header className="bg-white shadow-sm">
-                    <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">{header}</div>
-                </header>
+    return (
+        <div className="min-h-screen bg-slate-50">
+            <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 bg-slate-900 p-4 lg:block">
+                {nav}
+            </aside>
+
+            <div className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-slate-200 bg-white px-4 lg:hidden">
+                <Link
+                    href={route("dashboard")}
+                    className="flex items-center gap-2 font-extrabold text-slate-900"
+                >
+                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-teal-600 text-white">
+                        H
+                    </span>
+                    HelpDesk
+                </Link>
+                <button
+                    type="button"
+                    onClick={() => setOpen(true)}
+                    className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+                    aria-label="Open menu"
+                >
+                    <svg
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+                    </svg>
+                </button>
+            </div>
+
+            {open && (
+                <div
+                    className="fixed inset-0 z-40 lg:hidden"
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div
+                        className="absolute inset-0 bg-slate-900/50"
+                        onClick={() => setOpen(false)}
+                    />
+                    <aside className="absolute inset-y-0 left-0 w-72 bg-slate-900 p-4 shadow-xl">
+                        {nav}
+                    </aside>
+                </div>
             )}
 
-            <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+            <div className="lg:pl-64">
+                <FlashMessage />
+
+                {header && (
+                    <header className="border-b border-slate-200 bg-white">
+                        <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
+                            {header}
+                        </div>
+                    </header>
+                )}
+
+                <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+                    {children}
+                </main>
+            </div>
         </div>
     );
 }

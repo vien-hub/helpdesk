@@ -1,5 +1,5 @@
-import { usePage } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 
 export default function FlashMessage() {
     const { flash } = usePage().props;
@@ -11,22 +11,26 @@ export default function FlashMessage() {
     useEffect(() => {
         if (!message) return;
         setVisible(true);
-        const timer = setTimeout(() => setVisible(false), 4000); // auto-dismiss
+        const timer = setTimeout(() => setVisible(false), 4000);
         return () => clearTimeout(timer);
     }, [flash]);
 
     if (!message || !visible) return null;
 
     return (
-        <div className="fixed inset-x-0 top-20 z-50 mx-auto w-full max-w-md px-4" role="status" aria-live="polite">
+        <div
+            className="fixed inset-x-0 top-20 z-50 mx-auto w-full max-w-md px-4"
+            role="status"
+            aria-live="polite"
+        >
             <div
-                className={`flex items-start justify-between gap-3 rounded-lg border px-4 py-3 shadow-lg ${
+                className={`flex items-start justify-between gap-3 rounded-2xl border px-4 py-3 shadow-lg ${
                     isError
-                        ? 'border-red-200 bg-red-50 text-red-800'
-                        : 'border-green-200 bg-green-50 text-green-800'
+                        ? "border-rose-200 bg-rose-50 text-rose-800"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-800"
                 }`}
             >
-                <p className="text-sm font-medium">{message}</p>
+                <p className="text-sm font-semibold">{message}</p>
                 <button
                     type="button"
                     onClick={() => setVisible(false)}

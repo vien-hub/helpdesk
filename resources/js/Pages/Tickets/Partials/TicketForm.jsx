@@ -1,17 +1,20 @@
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm } from "@inertiajs/react";
 
 const inputClass =
-    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500';
+    "mt-1 block w-full rounded-xl border-slate-300 shadow-sm focus:border-teal-500 focus:ring-teal-500";
 
 function Field({ label, name, error, children }) {
     return (
         <div>
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+            <label
+                htmlFor={name}
+                className="block text-sm font-semibold text-slate-700"
+            >
                 {label}
             </label>
             {children}
             {error && (
-                <p className="mt-1 text-sm text-red-600" role="alert">
+                <p className="mt-1 text-sm text-rose-600" role="alert">
                     {error}
                 </p>
             )}
@@ -20,30 +23,36 @@ function Field({ label, name, error, children }) {
 }
 
 export default function TicketForm({ ticket = null, options, submitLabel }) {
-    // useForm keeps the typed values after a failed submit and exposes errors + processing.
     const { data, setData, post, put, processing, errors } = useForm({
-        title: ticket?.title ?? '',
-        description: ticket?.description ?? '',
-        priority: ticket?.priority ?? 'Medium',
-        status: ticket?.status ?? 'Open',
-        category: ticket?.category ?? '',
+        title: ticket?.title ?? "",
+        description: ticket?.description ?? "",
+        priority: ticket?.priority ?? "Medium",
+        status: ticket?.status ?? "Open",
+        category: ticket?.category ?? "",
     });
 
     const submit = (e) => {
         e.preventDefault();
         if (ticket) {
-            put(route('tickets.update', ticket.id));
+            put(route("tickets.update", ticket.id));
         } else {
-            post(route('tickets.store'));
+            post(route("tickets.store"));
         }
     };
 
     const hasErrors = Object.keys(errors).length > 0;
 
     return (
-        <form onSubmit={submit} className="space-y-5 rounded-lg bg-white p-4 shadow-sm sm:p-6" noValidate>
+        <form
+            onSubmit={submit}
+            className="space-y-5 rounded-2xl border border-slate-200 bg-white p-5 sm:p-7"
+            noValidate
+        >
             {hasErrors && (
-                <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+                <div
+                    className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800"
+                    role="alert"
+                >
                     Please fix the errors below and try again.
                 </div>
             )}
@@ -53,19 +62,23 @@ export default function TicketForm({ ticket = null, options, submitLabel }) {
                     id="title"
                     type="text"
                     value={data.title}
-                    onChange={(e) => setData('title', e.target.value)}
+                    onChange={(e) => setData("title", e.target.value)}
                     className={inputClass}
                     maxLength={255}
                     placeholder="Short summary of the problem"
                 />
             </Field>
 
-            <Field label="Description" name="description" error={errors.description}>
+            <Field
+                label="Description"
+                name="description"
+                error={errors.description}
+            >
                 <textarea
                     id="description"
                     rows={5}
                     value={data.description}
-                    onChange={(e) => setData('description', e.target.value)}
+                    onChange={(e) => setData("description", e.target.value)}
                     className={inputClass}
                     placeholder="Describe the issue in detail (at least 10 characters)"
                 />
@@ -76,7 +89,7 @@ export default function TicketForm({ ticket = null, options, submitLabel }) {
                     <select
                         id="priority"
                         value={data.priority}
-                        onChange={(e) => setData('priority', e.target.value)}
+                        onChange={(e) => setData("priority", e.target.value)}
                         className={inputClass}
                     >
                         {options.priorities.map((p) => (
@@ -91,7 +104,7 @@ export default function TicketForm({ ticket = null, options, submitLabel }) {
                     <select
                         id="status"
                         value={data.status}
-                        onChange={(e) => setData('status', e.target.value)}
+                        onChange={(e) => setData("status", e.target.value)}
                         className={inputClass}
                     >
                         {options.statuses.map((s) => (
@@ -106,7 +119,7 @@ export default function TicketForm({ ticket = null, options, submitLabel }) {
                     <select
                         id="category"
                         value={data.category}
-                        onChange={(e) => setData('category', e.target.value)}
+                        onChange={(e) => setData("category", e.target.value)}
                         className={inputClass}
                     >
                         <option value="">Select a category</option>
@@ -121,17 +134,21 @@ export default function TicketForm({ ticket = null, options, submitLabel }) {
 
             <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
                 <Link
-                    href={ticket ? route('tickets.show', ticket.id) : route('tickets.index')}
-                    className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    href={
+                        ticket
+                            ? route("tickets.show", ticket.id)
+                            : route("tickets.index")
+                    }
+                    className="inline-flex justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                 >
                     Cancel
                 </Link>
                 <button
                     type="submit"
                     disabled={processing}
-                    className="inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex justify-center rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    {processing ? 'Saving...' : submitLabel}
+                    {processing ? "Saving..." : submitLabel}
                 </button>
             </div>
         </form>
